@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Checkbox, Button, Icon } from 'semantic-ui-react';
+import { Table, Checkbox, Button, Icon, Label } from 'semantic-ui-react';
 import './App.css';
 
 const initialTodos = [
@@ -33,6 +33,7 @@ const TodoItem = ({ title, completed, checkTodo, removeTodo }) => (
         animated
         color="red"
         size="tiny"
+        floated="right"
         onClick={() => removeTodo(title)}
       >
         <Button.Content hidden>Delete</Button.Content>
@@ -72,7 +73,23 @@ const TodosTable = ({
               }
             />
           </Table.HeaderCell>
-          <Table.HeaderCell colSpan="2">Complete all</Table.HeaderCell>
+          <Table.HeaderCell>Complete all</Table.HeaderCell>
+          <Table.HeaderCell>
+            <Button
+              animated
+              color="orange"
+              size="tiny"
+              floated="right"
+              onClick={() =>
+                setTodos(() => todos.filter(todo => !todo.completed))
+              }
+            >
+              <Button.Content hidden>Clean</Button.Content>
+              <Button.Content visible>
+                <Icon name="recycle" />
+              </Button.Content>
+            </Button>
+          </Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body>
@@ -111,7 +128,7 @@ const Header = ({ createTodo }) => {
           aria-label="New Todo"
           value={title}
           onChange={event => setTitle(event.target.value)}
-          style={{ marginRight: "1rem" }}
+          style={{ marginRight: '1rem' }}
         />
         <Button
           animated
@@ -132,7 +149,7 @@ const Header = ({ createTodo }) => {
           </Button.Content>
         </Button>
       </div>
-      <p style={{ color: 'red', margin: "1rem 0" }}>{error}</p>
+      <p style={{ color: 'red', margin: '1rem 0' }}>{error}</p>
     </>
   );
 };
@@ -144,7 +161,7 @@ Header.propTypes = {
 const App = () => {
   const [todos, setTodos] = useState(initialTodos);
 
-  const areAllChecked = () => !todos.find(todo => !todo.completed);
+  const areAllChecked = () => todos.every(todo => todo.completed);
 
   const checkTodo = title =>
     setTodos(
@@ -156,7 +173,11 @@ const App = () => {
   const removeTodo = title =>
     setTodos(todos.filter(todo => todo.title !== title));
 
-  const findTodo = title => todos.find(todo => !todo.title.localeCompare(title, undefined, { sensitivity: 'accent' }));
+  const findTodo = title =>
+    todos.find(
+      todo =>
+        !todo.title.localeCompare(title, undefined, { sensitivity: 'accent' })
+    );
 
   const createTodo = title => {
     if (!title || findTodo(title)) {
@@ -172,13 +193,19 @@ const App = () => {
     <div className="app">
       <div className="todo-container">
         <Header createTodo={createTodo} />
-        <TodosTable
-          todos={todos}
-          setTodos={setTodos}
-          areAllChecked={areAllChecked}
-          checkTodo={checkTodo}
-          removeTodo={removeTodo}
-        />
+        {todos.length === 0 ? (
+          <Label style={{ marginTop: '1rem', width: '100%' }} color="blue">
+            Nothing to do yet.
+          </Label>
+        ) : (
+            <TodosTable
+              todos={todos}
+              setTodos={setTodos}
+              areAllChecked={areAllChecked}
+              checkTodo={checkTodo}
+              removeTodo={removeTodo}
+            />
+          )}
       </div>
     </div>
   );
