@@ -26,9 +26,6 @@ const App = () => {
   }, []);
 
   const checkTodo = (id, completed) => {
-    setTodos(
-      todos.map(todo => (todo.id === id ? { ...todo, completed } : todo))
-    );
     const options = {
       method: 'PATCH',
       body: JSON.stringify({ completed }),
@@ -36,29 +33,23 @@ const App = () => {
         'Content-Type': 'application/json',
       },
     };
-    return fetch(`${TODOS_URL}/${id}`, options);
+    return fetch(`${TODOS_URL}/${id}`, options).then(fetchTodos);
   };
 
   const checkAll = () => {
     const completed = todos.some(todo => !todo.completed);
-    Promise.all(todos.map(todo => checkTodo(todo.id, completed))).then(
-      fetchTodos
-    );
+    todos.forEach(todo => checkTodo(todo.id, completed));
   };
 
   const removeTodo = id => {
-    setTodos(todos.filter(todo => todo.id !== id));
     const options = {
       method: 'DELETE',
     };
-    return fetch(`${TODOS_URL}/${id}`, options);
+    return fetch(`${TODOS_URL}/${id}`, options).then(fetchTodos);
   };
 
-  const clearCompleted = () => {
-    Promise.all(
-      todos.filter(todo => todo.completed).map(todo => removeTodo(todo.id))
-    ).then(fetchTodos);
-  };
+  const clearCompleted = () =>
+    todos.filter(todo => todo.completed).forEach(todo => removeTodo(todo.id));
 
   const findTodo = id => todos.find(todo => todo.id === id);
 
@@ -74,7 +65,6 @@ const App = () => {
     }
 
     const todo = { id, title, completed: false };
-    setTodos([...todos, todo]);
     const options = {
       method: 'POST',
       body: JSON.stringify(todo),
@@ -82,7 +72,7 @@ const App = () => {
         'Content-Type': 'application/json',
       },
     };
-    fetch(TODOS_URL, options);
+    fetch(TODOS_URL, options).then(fetchTodos);
     return true;
   };
 
