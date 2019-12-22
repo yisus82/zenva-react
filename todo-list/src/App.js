@@ -41,8 +41,8 @@ const App = () => {
 
   const checkAll = () => {
     const completed = todos.some(todo => !todo.completed);
-    Promise.all(todos.map(todo => checkTodo(todo.id, completed))).then(() =>
-      fetchTodos()
+    Promise.all(todos.map(todo => checkTodo(todo.id, completed))).then(
+      fetchTodos
     );
   };
 
@@ -57,7 +57,7 @@ const App = () => {
   const clearCompleted = () => {
     Promise.all(
       todos.filter(todo => todo.completed).map(todo => removeTodo(todo.id))
-    ).then(() => fetchTodos());
+    ).then(fetchTodos);
   };
 
   const findTodo = id => todos.find(todo => todo.id === id);

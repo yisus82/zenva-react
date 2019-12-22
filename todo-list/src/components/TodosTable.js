@@ -17,7 +17,7 @@ const TodosTable = ({
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>
-            <Checkbox checked={allChecked} onClick={() => checkAll()} />
+            <Checkbox checked={allChecked} onClick={checkAll} />
           </Table.HeaderCell>
           <Table.HeaderCell>Complete all</Table.HeaderCell>
           <Table.HeaderCell>
@@ -26,7 +26,7 @@ const TodosTable = ({
               color="orange"
               size="tiny"
               floated="right"
-              onClick={() => clearCompleted()}
+              onClick={clearCompleted}
             >
               <Button.Content hidden>Clear</Button.Content>
               <Button.Content visible>
