@@ -25,23 +25,25 @@ const App = () => {
     fetchTodos();
   }, []);
 
-  const areAllChecked = () => todos.every(todo => todo.completed);
-
-  const checkTodo = id => {
-    const todoToUpdate = todos.find(todo => todo.id === id);
+  const checkTodo = (id, completed) => {
     setTodos(
-      todos.map(todo =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
+      todos.map(todo => (todo.id === id ? { ...todo, completed } : todo))
     );
     const options = {
       method: 'PATCH',
-      body: JSON.stringify({ completed: !todoToUpdate.completed }),
+      body: JSON.stringify({ completed }),
       headers: {
         'Content-Type': 'application/json',
       },
     };
-    fetch(`${TODOS_URL}/${id}`, options);
+    return fetch(`${TODOS_URL}/${id}`, options);
+  };
+
+  const checkAll = () => {
+    const completed = todos.some(todo => !todo.completed);
+    Promise.all(todos.map(todo => checkTodo(todo.id, completed))).then(() =>
+      fetchTodos()
+    );
   };
 
   const removeTodo = id => {
@@ -49,21 +51,29 @@ const App = () => {
     const options = {
       method: 'DELETE',
     };
-    fetch(`${TODOS_URL}/${id}`, options);
+    return fetch(`${TODOS_URL}/${id}`, options);
   };
 
-  const findTodo = title =>
-    todos.find(
-      todo =>
-        !todo.title.localeCompare(title, undefined, { sensitivity: 'accent' })
-    );
+  const clearCompleted = () => {
+    Promise.all(
+      todos.filter(todo => todo.completed).map(todo => removeTodo(todo.id))
+    ).then(() => fetchTodos());
+  };
+
+  const findTodo = id => todos.find(todo => todo.id === id);
 
   const createTodo = title => {
-    if (!title || findTodo(title)) {
+    if (!title) {
       return false;
     }
 
-    const todo = { id: slug(title), title, completed: false };
+    const id = slug(title).toLowerCase();
+
+    if (findTodo(id)) {
+      return false;
+    }
+
+    const todo = { id, title, completed: false };
     setTodos([...todos, todo]);
     const options = {
       method: 'POST',
@@ -97,8 +107,8 @@ const App = () => {
         ) : (
           <TodosTable
             todos={todos}
-            setTodos={setTodos}
-            areAllChecked={areAllChecked}
+            checkAll={checkAll}
+            clearCompleted={clearCompleted}
             checkTodo={checkTodo}
             removeTodo={removeTodo}
           />

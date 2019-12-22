@@ -3,22 +3,22 @@
     {
       "title": "Learn React",
       "completed": false,
-      "id": "Learn-react"
+      "id": "learn-react"
     },
     {
       "title": "Learn Redux",
       "completed": false,
-      "id": "Learn-redux"
+      "id": "learn-redux"
     },
     {
       "title": "Learn React Native",
       "completed": false,
-      "id": "Learn-react-native"
+      "id": "learn-react-native"
     },
     {
       "title": "Create a brand new web app!",
       "completed": false,
-      "id": "Create-a-brand-new-app"
+      "id": "create-a-brand-new-app"
     }
   ]
 }

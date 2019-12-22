@@ -6,6 +6,15 @@ const Header = ({ createTodo }) => {
   const [title, setTitle] = useState('');
   const [error, setError] = useState('');
 
+  const submitTodo = () => {
+    if (createTodo(title)) {
+      setTitle('');
+      setError('');
+    } else {
+      setError('Duplicated ToDo title');
+    }
+  };
+
   return (
     <>
       <div style={{ display: 'flex' }}>
@@ -16,21 +25,14 @@ const Header = ({ createTodo }) => {
           aria-label="New Todo"
           value={title}
           onChange={event => setTitle(event.target.value)}
-          style={{ marginRight: '1rem' }}
-        />
-        <Button
-          animated
-          color="blue"
-          size="tiny"
-          onClick={() => {
-            if (createTodo(title)) {
-              setTitle('');
-              setError('');
-            } else {
-              setError('Duplicated ToDo title');
+          onKeyDown={event => {
+            if (event.key === 'Enter') {
+              submitTodo();
             }
           }}
-        >
+          style={{ marginRight: '1rem' }}
+        />
+        <Button animated color="blue" size="tiny" onClick={() => submitTodo()}>
           <Button.Content hidden>Create</Button.Content>
           <Button.Content visible>
             <Icon name="add" />

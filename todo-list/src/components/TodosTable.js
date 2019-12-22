@@ -5,63 +5,55 @@ import TodoItem from './TodoItem';
 
 const TodosTable = ({
   todos,
-  setTodos,
-  areAllChecked,
+  checkAll,
+  clearCompleted,
   checkTodo,
   removeTodo,
-}) => (
-  <Table>
-    <Table.Header>
-      <Table.Row>
-        <Table.HeaderCell>
-          <Checkbox
-            checked={areAllChecked()}
-            onClick={() =>
-              setTodos(() => {
-                const check = !areAllChecked();
-                return todos.map(todo => ({ ...todo, completed: check }));
-              })
-            }
+}) => {
+  const allChecked = todos.every(todo => todo.completed);
+
+  return (
+    <Table>
+      <Table.Header>
+        <Table.Row>
+          <Table.HeaderCell>
+            <Checkbox checked={allChecked} onClick={() => checkAll()} />
+          </Table.HeaderCell>
+          <Table.HeaderCell>Complete all</Table.HeaderCell>
+          <Table.HeaderCell>
+            <Button
+              animated
+              color="orange"
+              size="tiny"
+              floated="right"
+              onClick={() => clearCompleted()}
+            >
+              <Button.Content hidden>Clear</Button.Content>
+              <Button.Content visible>
+                <Icon name="recycle" />
+              </Button.Content>
+            </Button>
+          </Table.HeaderCell>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {todos.map((todo, index) => (
+          <TodoItem
+            key={index}
+            todo={todo}
+            checkTodo={checkTodo}
+            removeTodo={removeTodo}
           />
-        </Table.HeaderCell>
-        <Table.HeaderCell>Complete all</Table.HeaderCell>
-        <Table.HeaderCell>
-          <Button
-            animated
-            color="orange"
-            size="tiny"
-            floated="right"
-            onClick={() =>
-              setTodos(() => todos.filter(todo => !todo.completed))
-            }
-          >
-            <Button.Content hidden>Clean</Button.Content>
-            <Button.Content visible>
-              <Icon name="recycle" />
-            </Button.Content>
-          </Button>
-        </Table.HeaderCell>
-      </Table.Row>
-    </Table.Header>
-    <Table.Body>
-      {todos.map(({ id, title, completed }) => (
-        <TodoItem
-          key={title}
-          id={id}
-          title={title}
-          completed={completed}
-          checkTodo={checkTodo}
-          removeTodo={removeTodo}
-        />
-      ))}
-    </Table.Body>
-  </Table>
-);
+        ))}
+      </Table.Body>
+    </Table>
+  );
+};
 
 TodosTable.propTypes = {
   todos: PropTypes.array.isRequired,
-  setTodos: PropTypes.func.isRequired,
-  areAllChecked: PropTypes.func.isRequired,
+  checkAll: PropTypes.func.isRequired,
+  clearCompleted: PropTypes.func.isRequired,
   checkTodo: PropTypes.func.isRequired,
   removeTodo: PropTypes.func.isRequired,
 };
