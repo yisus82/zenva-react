@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Table, Checkbox, Button, Icon } from 'semantic-ui-react';
 
-const TodoItem = ({ title, completed, checkTodo, removeTodo }) => (
+const TodoItem = ({ id, title, completed, checkTodo, removeTodo }) => (
   <Table.Row>
     <Table.Cell>
-      <Checkbox checked={completed} onClick={() => checkTodo(title)} />
+      <Checkbox checked={completed} onClick={() => checkTodo(id)} />
     </Table.Cell>
     <Table.Cell>{title}</Table.Cell>
     <Table.Cell>
@@ -14,7 +14,7 @@ const TodoItem = ({ title, completed, checkTodo, removeTodo }) => (
         color="red"
         size="tiny"
         floated="right"
-        onClick={() => removeTodo(title)}
+        onClick={() => removeTodo(id)}
       >
         <Button.Content hidden>Delete</Button.Content>
         <Button.Content visible>
@@ -26,6 +26,7 @@ const TodoItem = ({ title, completed, checkTodo, removeTodo }) => (
 );
 
 TodoItem.propTypes = {
+  id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   completed: PropTypes.bool.isRequired,
   checkTodo: PropTypes.func.isRequired,

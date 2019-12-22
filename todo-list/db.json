@@ -1,0 +1,24 @@
+{
+  "todos": [
+    {
+      "title": "Learn React",
+      "completed": false,
+      "id": "Learn-react"
+    },
+    {
+      "title": "Learn Redux",
+      "completed": false,
+      "id": "Learn-redux"
+    },
+    {
+      "title": "Learn React Native",
+      "completed": false,
+      "id": "Learn-react-native"
+    },
+    {
+      "title": "Create a brand new web app!",
+      "completed": false,
+      "id": "Create-a-brand-new-app"
+    }
+  ]
+}
